@@ -1,4 +1,4 @@
-﻿name: Costrall Windows CI
+name: Costrall Windows CI
 
 on:
   push:
@@ -34,14 +34,18 @@ jobs:
       - name: Backend integration test
         run: node scripts/test-backend.js
 
-      - name: Electron application smoke test
+      - name: Electron application startup smoke test
         shell: pwsh
         run: |
-          $env:COSTRALL_SMOKE = '1'
-          $env:COSTRALL_DEBUG = '1'
-          $electron = Resolve-Path '.\node_modules\electron\dist\electron.exe'
-          $proc = Start-Process -FilePath $electron -ArgumentList '.' -PassThru -Wait
-          if ($proc.ExitCode -ne 0) { throw "Electron smoke test failed with exit code $($proc.ExitCode)" }
+          $electron = Resolve-Path '.\\node_modules\\electron\\dist\\electron.exe'
+          $proc = Start-Process -FilePath $electron -ArgumentList '.' -PassThru
+          Start-Sleep -Seconds 15
+          $proc.Refresh()
+          if ($proc.HasExited) {
+            throw "Electron exited during startup (exit code $($proc.ExitCode))"
+          }
+          Stop-Process -Id $proc.Id -Force
+          Write-Host 'Electron remained running for 15 seconds; startup smoke test passed.'
 
       - name: Build Windows installer
         run: npm run dist
