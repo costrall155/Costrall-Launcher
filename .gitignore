@@ -1,0 +1,42 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+credentials.json
+secrets.json
+service-account*.json
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
